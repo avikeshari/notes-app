@@ -1,8 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Plus, Menu } from 'lucide-react';
-
-// --- Imports ---
 import { NotesProvider, NotesContext } from './context/NotesContext';
 import { Navbar } from './components/Navbar';
 import { SearchBar } from './components/SearchBar';
@@ -21,8 +19,6 @@ const GlobalStyles = () => (
 
 const AppLayout = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  
-  // FIX: Pulling the correct functions from Context!
   const { setShowModal, setCurrentNote } = useContext(NotesContext);
   
   return (
@@ -43,12 +39,10 @@ const AppLayout = () => {
             </button>
             <SearchBar />
           </div>
-          
-          {/* FIX: Updated this button to use the correct functions! */}
           <button 
             onClick={() => {
-              setCurrentNote(null); // Clears the form
-              setShowModal(true);   // Opens the modal
+              setCurrentNote(null);
+              setShowModal(true);
             }} 
             className="ml-4 flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm font-medium"
           >

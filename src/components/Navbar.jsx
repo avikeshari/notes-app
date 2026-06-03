@@ -27,7 +27,7 @@ export const Navbar = ({ isMobileOpen, setIsMobileOpen }) => {
         {/* Logo Area */}
         <div className="p-6 flex items-center justify-between border-b border-gray-100">
           <h1 className="text-2xl font-bold text-indigo-600 flex items-center gap-2">
-            <BookOpen className="w-6 h-6" /> NotesApp
+            <BookOpen className="w-6 h-6" /> Avi's Notes
           </h1>
           <button className="md:hidden text-gray-500 p-1 hover:bg-gray-100 rounded-lg" onClick={() => setIsMobileOpen(false)}>
             <X className="w-6 h-6" />

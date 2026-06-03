@@ -6,7 +6,7 @@ import { NoteForm } from './NoteForm';
 export const NoteModal = () => {
   const { showModal, setShowModal, currentNote, addOrUpdateNote } = useContext(NotesContext);
 
-  if (!showModal) return null; // Don't show if false
+  if (!showModal) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
