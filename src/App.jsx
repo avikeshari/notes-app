@@ -1,122 +1,83 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState, useContext } from 'react';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import { Plus, Menu } from 'lucide-react';
 
-function App() {
-  const [count, setCount] = useState(0)
+// --- Imports ---
+import { NotesProvider, NotesContext } from './context/NotesContext';
+import { Navbar } from './components/Navbar';
+import { SearchBar } from './components/SearchBar';
+import { TagFilter } from './components/TagFilter';
+import { NoteModal } from './components/NoteModal';
+import { HomePage } from './pages/Home';         
+import { ArchivePage } from './pages/Archive';
+import { TrashPage } from './pages/Trash';
 
+const GlobalStyles = () => (
+  <style>{`
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  `}</style>
+);
+
+const AppLayout = () => {
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  
+  // FIX: Pulling the correct functions from Context!
+  const { setShowModal, setCurrentNote } = useContext(NotesContext);
+  
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="flex h-screen w-full bg-gray-50 text-gray-800 font-sans overflow-hidden">
+      <GlobalStyles />
+      
+      <Navbar isMobileOpen={isMobileOpen} setIsMobileOpen={setIsMobileOpen} />
+      
+      <main className="flex-1 flex flex-col h-full overflow-hidden">
+        
+        <header className="bg-white border-b border-gray-200 p-4 flex items-center justify-between z-10">
+          <div className="flex items-center gap-4 flex-1">
+            <button 
+              className="p-2 -ml-2 text-gray-600 md:hidden hover:bg-gray-100 rounded-lg" 
+              onClick={() => setIsMobileOpen(true)}
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <SearchBar />
+          </div>
+          
+          {/* FIX: Updated this button to use the correct functions! */}
+          <button 
+            onClick={() => {
+              setCurrentNote(null); // Clears the form
+              setShowModal(true);   // Opens the modal
+            }} 
+            className="ml-4 flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm font-medium"
+          >
+            <Plus className="w-5 h-5" /> <span className="hidden sm:inline">New Note</span>
+          </button>
+        </header>
+        
+        <TagFilter />
+        
+        <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/archive" element={<ArchivePage />} />
+            <Route path="/trash" element={<TrashPage />} />
+          </Routes>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      </main>
 
-      <div className="ticks"></div>
+      <NoteModal />
+    </div>
+  );
+};
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+export default function App() {
+  return (
+    <NotesProvider> 
+      <HashRouter>
+        <AppLayout />
+      </HashRouter>
+    </NotesProvider>
+  );
 }
-
-export default App
